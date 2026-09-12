@@ -464,6 +464,12 @@ a {
   border-color: var(--danger);
 }
 
+.field-error {
+  color: var(--danger);
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+}
+
 .btn-block {
   width: 100%;
 }

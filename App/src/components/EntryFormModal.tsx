@@ -200,11 +200,13 @@ export function EntryFormModal() {
 
   const [pickedType, setPickedType] = useState<EntryType | null>(presetType ?? null);
   const [form, setForm] = useState<FormState | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isOpen) {
       setForm(null);
       setPickedType(null);
+      setError(null);
       return;
     }
     if (editingEntryId) {
@@ -240,6 +242,14 @@ export function EntryFormModal() {
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
+    setError(null);
+  }
+
+  function validate(f: FormState): string | null {
+    if (f.type === 'shopping_item' && !f.listName.trim()) {
+      return 'List name is required.';
+    }
+    return null;
   }
 
   async function handleTypePick(type: EntryType) {
@@ -280,6 +290,11 @@ export function EntryFormModal() {
 
   async function handleSave() {
     if (!form) return;
+    const validationError = validate(form);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
     const base = buildEntryFromForm(form);
     if (editingEntryId) {
       await updateEntry(editingEntryId, base);
@@ -291,6 +306,11 @@ export function EntryFormModal() {
 
   async function handleExportSingle() {
     if (!form) return;
+    const validationError = validate(form);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
     const base = buildEntryFromForm(form);
     // Persist first so the exported entry reflects unsaved edits, and so it
     // has a stable id/timestamps for the .ics UID.
@@ -320,8 +340,9 @@ export function EntryFormModal() {
       .split('\n')
       .map((l) => l.trim())
       .filter(Boolean);
+    const createdIds: string[] = [];
     for (const line of lines) {
-      await createEntry({
+      const created = await createEntry({
         type: 'shopping_item',
         title: line,
         allDay: true,
@@ -329,6 +350,14 @@ export function EntryFormModal() {
         exportToCalendar: false,
         linkedEntryIds: [editingEntryId],
         payload: { listName: 'Groceries', checked: false },
+      });
+      createdIds.push(created.id);
+    }
+    if (createdIds.length > 0) {
+      const meal = await getEntry(editingEntryId);
+      const existingLinks = meal?.linkedEntryIds ?? [];
+      await updateEntry(editingEntryId, {
+        linkedEntryIds: [...new Set([...existingLinks, ...createdIds])],
       });
     }
     update('ingredientsDraft', '');
@@ -654,6 +683,8 @@ export function EntryFormModal() {
                 </button>
               </>
             )}
+
+            {error && <div className="field-error">{error}</div>}
 
             <div className="btn-row">
               {editingEntryId && (

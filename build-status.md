@@ -36,10 +36,14 @@ Tested directly against `https://kalimuthukrishnaraj-ai.github.io/Track/` (Chrom
 
 **Decision needed (not yet made or implemented) for AC6.1**: recommend filtering the export to (a) all recurring entries regardless of their original `startAt` (their RRULE's DTSTART must stay as-is for correct future-occurrence expansion in Apple Calendar) plus (b) non-recurring entries with `startAt >= start of today`. Flagging this rather than implementing it unilaterally since it changes export output.
 
-**Still open, not yet fixed**:
-- AC1.5 — add save-blocking validation for `listName` (and reconsider whether `mealSlot`'s forced-default is actually sufficient or if the intent was broader payload validation).
-- AC4.3 — make the meal→shopping-item link bidirectional by patching the meal's `linkedEntryIds` in `handleAddIngredients`.
-- AC6.1 — implement the upcoming-window filter above once confirmed.
+### Update (2026-09-11): AC1.5, AC4.3, AC6.1 fixed and verified
+
+- **AC1.5 — fixed.** Added a `validate()` check in [EntryFormModal.tsx](App/src/components/EntryFormModal.tsx) that blocks `handleSave`/`handleExportSingle` and shows an inline "List name is required." error (new `.field-error` class in [index.css](App/src/index.css)) when a shopping_item's `listName` is blank. Verified live: entering an empty List name now blocks save with the error shown; filling it in saves normally.
+- **AC4.3 — fixed.** `handleAddIngredients` now also patches the meal's own `linkedEntryIds` with the newly-created shopping item ids (deduped via `Set`), so the link is bidirectional. Verified live via direct IndexedDB inspection: the meal record now carries `linkedEntryIds` pointing at both generated items, which each still point back at the meal.
+- **AC6.1 — fixed and decision implemented.** `listExportableEntries()` in [entries.ts](App/src/data/repositories/entries.ts) now applies the window decided above: recurring entries are always included (DTSTART must stay as their real original `startAt` for RRULE expansion to work), non-recurring entries only if `startAt >= start of today`. Added `App/src/data/repositories/__tests__/entries.test.ts` (3 new tests) covering: past non-recurring excluded, past-dated recurring still included, unflagged entries excluded.
+- Full suite: `npm run build` (tsc + vite build) passes clean. `npm test` — 25 tests now (22 + 3 new), 1 pre-existing failure unrelated to this work (see below).
+
+**New finding, not fixed (flagging, out of scope of the three ACs above)**: `calendarExport.test.ts`'s "uses an absolute 6pm-the-day-before trigger for assignments" test hardcodes a UTC-timezone assumption in its own comment ("this test suite runs in UTC") that doesn't hold on this machine (`America/Edmonton`). It fails here even though the underlying `assignmentAlarm` logic is correct (computes in the browser's real local timezone, as intended) — the test itself needs to either mock the timezone or compute its expected UTC string relative to the actual local offset rather than assuming UTC==local.
 
 ## Folder naming (read this before assuming `architecture.md`'s prose is literal)
 

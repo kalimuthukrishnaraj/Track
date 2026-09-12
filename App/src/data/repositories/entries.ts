@@ -80,10 +80,24 @@ export async function listEntriesByStatus(status: EntryStatus): Promise<Entry[]>
   return sortByStartAt(results);
 }
 
-/** List entries flagged for calendar export. */
+/**
+ * List entries flagged for calendar export, restricted to the "upcoming" window:
+ * recurring entries are always included (their RRULE needs the original startAt
+ * as DTSTART to expand correctly, regardless of how far in the past it is), and
+ * non-recurring entries are included only if their startAt is today or later.
+ */
 export async function listExportableEntries(): Promise<Entry[]> {
   const all = await db.entries.toArray();
-  return sortByStartAt(all.filter((e) => e.exportToCalendar));
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const todayMs = startOfToday.getTime();
+  return sortByStartAt(
+    all.filter((e) => {
+      if (!e.exportToCalendar) return false;
+      if (e.recurrenceRule) return true;
+      return e.startAt != null && e.startAt >= todayMs;
+    }),
+  );
 }
 
 /** List entries linked to a given entry id (either direction is not tracked; this checks linkedEntryIds). */
