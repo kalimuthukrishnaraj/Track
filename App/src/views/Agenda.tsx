@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../data/db';
 import type { Entry } from '../data/db';
@@ -9,6 +10,46 @@ import { useEntryFormStore } from '../store/useEntryFormStore';
 interface Occurrence {
   entry: Entry;
   occurrenceStart: number;
+}
+
+const INSTALL_BANNER_DISMISSED_KEY = 'track:installBannerDismissed';
+
+function isStandalone(): boolean {
+  const nav = window.navigator as Navigator & { standalone?: boolean };
+  return window.matchMedia('(display-mode: standalone)').matches || nav.standalone === true;
+}
+
+function InstallBanner() {
+  const [dismissed, setDismissed] = useState(() => {
+    try {
+      return localStorage.getItem(INSTALL_BANNER_DISMISSED_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
+
+  if (dismissed || isStandalone()) return null;
+
+  function dismiss() {
+    setDismissed(true);
+    try {
+      localStorage.setItem(INSTALL_BANNER_DISMISSED_KEY, '1');
+    } catch {
+      // private browsing or storage disabled — dismissal just won't persist
+    }
+  }
+
+  return (
+    <div className="install-banner">
+      <div className="install-banner-text">
+        Tap <strong>Share</strong> then <strong>Add to Home Screen</strong> — Track works best
+        installed, with full offline access.
+      </div>
+      <button type="button" className="icon-button" onClick={dismiss} aria-label="Dismiss">
+        ✕
+      </button>
+    </div>
+  );
 }
 
 function rangeLabel(anchorDate: number, mode: AgendaViewMode): string {
@@ -54,6 +95,8 @@ export function Agenda() {
 
   return (
     <div>
+      <InstallBanner />
+
       <div className="view-toggle">
         {(['day', 'week', 'month'] as AgendaViewMode[]).map((mode) => (
           <button

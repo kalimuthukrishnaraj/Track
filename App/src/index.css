@@ -280,6 +280,22 @@ a {
   padding: 40px 16px;
 }
 
+.install-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-elevated));
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 0.875rem;
+}
+
+.install-banner-text {
+  flex: 1;
+}
+
 .view-toggle {
   display: flex;
   gap: 6px;

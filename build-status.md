@@ -83,6 +83,10 @@ Changes made for this:
 - On-device Safari "Add to Home Screen" + .ics/VALARM verification on actual iPhone (AC6.4, AC8.1/8.3).
 - AC4.3/AC4.4 meal↔shopping-item link gaps noted above.
 
+## Add to Home Screen prompt (2026-09-11)
+
+iOS Safari has no `beforeinstallprompt`-style API, so "Add to Home Screen" can only ever be a manual instruction, never a triggerable one. Added a dismissible banner to the top of the Agenda view ([Agenda.tsx](App/src/views/Agenda.tsx)) — it checks `display-mode: standalone` / `navigator.standalone` and only shows when the app isn't already installed; dismissal is remembered in `localStorage` (`track:installBannerDismissed`) so it doesn't nag every visit. Verified in the browser (light/dark, desktop/mobile width): shows correctly, dismiss button works, and dismissal survives reload. Placed on Agenda specifically since it's the landing route (`/`).
+
 ## Not yet done (other next steps)
 
 - Real app icons — the PWA icons are a generated placeholder ("T" on blue), not a designed icon.
