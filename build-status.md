@@ -91,6 +91,10 @@ iOS Safari has no `beforeinstallprompt`-style API, so "Add to Home Screen" can o
 
 Added a one-line subtitle under each view's header title in [App.tsx](App/src/App.tsx) (`ROUTE_META`), explaining what each tab is for — prompted by the user being confused about how the bottom-nav tabs (4) relate to the Settings export-defaults list (6 entry types). Also corrected `ENTRY_TYPE_META` labels in [entryMeta.ts](App/src/components/entryMeta.ts) to full title case ("Work Shift", "Shopping Item" instead of "Work shift"/"Shopping item") — this label is reused everywhere (Settings list, the entry-type picker, Agenda row meta text), so the fix applies app-wide. Verified visually across all 5 routes (light/dark). One correction caught during review: the Shopping subtitle originally said "Grocery & errand items" — wrong, since `Shopping.tsx` only ever queries `shopping_item` entries (errands live under Tasks) — fixed before shipping.
 
+## User-confirmed behavior (2026-09-12): Settings export toggles are defaults, not retroactive
+
+On-device test: enabled Task/Errand in Settings → "Export defaults by type", then exported — those entries were still missing from the `.ics`. Root cause confirmed by user: the entries were created *before* the Settings toggle was turned on, so they individually still carried `exportToCalendar: false` from creation time. Settings only sets the default applied to *new* entries (`EntryFormModal.tsx`'s `emptyForm` reads `exportDefaults[type]` at creation), it never bulk-updates existing ones. Fix was flipping the toggle on the individual pre-existing entries — confirmed working. Not a bug; no code change made. Worth knowing if this recurs: there's no "apply defaults to all existing entries of this type" bulk action in Settings — could add one if it comes up again.
+
 ## Not yet done (other next steps)
 
 - Real app icons — the PWA icons are a generated placeholder ("T" on blue), not a designed icon.
