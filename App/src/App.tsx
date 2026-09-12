@@ -12,7 +12,7 @@ import type { EntryType } from './data/db';
 const ROUTE_META: Record<string, { title: string; subtitle: string; fabType?: EntryType }> = {
   '/': {
     title: 'Agenda',
-    subtitle: 'Work shifts, assignments, appointments & travel on one calendar.',
+    subtitle: 'Work shifts, Assignments, Appointments & Travel on one calendar.',
   },
   '/tasks': {
     title: 'Tasks',
