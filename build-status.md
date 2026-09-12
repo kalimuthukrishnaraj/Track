@@ -52,9 +52,17 @@ Changes made for this:
 1. ✅ `deploy.yml` moved from `Claude outputs/` into `.github/workflows/deploy.yml` (contents were identical to the standalone copy; the stray `Claude outputs/` folder was deleted after confirming the diff).
 2. ✅ `git init`'d at `Track/`, root commit `6607200` (53 files — all docs + `App/` source, `node_modules`/`dist` excluded per `.gitignore`), pushed to `https://github.com/kalimuthukrishnaraj-ai/Track.git` on `main`.
 
-### Still needed from the user
-1. In the repo's Settings → Pages, set Source to "GitHub Actions" (one-time) — not yet confirmed done.
-2. The push above should have triggered the workflow; check the Actions tab for build/deploy progress and the resulting `https://kalimuthukrishnaraj-ai.github.io/Track/` URL. Watch this first run specifically for the `App` vs `app` casing issue in case anything was missed.
+### Update (2026-09-11): live on GitHub Pages
+
+- Repo had to be made **public** — free GitHub Pages (via Actions) doesn't support private repos, and no code here contains personal data (all task/schedule data stays local in IndexedDB, per the local-only design), so this was a low-risk call.
+- Runs #1–#2 failed with `Get Pages site failed... Not Found` — expected, since they ran before Settings → Pages → Source was set to "GitHub Actions". Not a code issue.
+- Once Source was set to "GitHub Actions", an empty commit (`df87fdc`) retriggered the workflow: **run #3 succeeded** (build 21s, deploy 8s).
+- Verified live: **https://kalimuthukrishnaraj-ai.github.io/Track/** loads and renders the Agenda view correctly.
+
+### Still open
+- Real app icons (placeholder "T" on blue).
+- On-device Safari "Add to Home Screen" + .ics/VALARM verification on actual iPhone (AC6.4, AC8.1/8.3).
+- AC4.3/AC4.4 meal↔shopping-item link gaps noted above.
 
 ## Not yet done (other next steps)
 
