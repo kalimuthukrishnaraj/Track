@@ -22,7 +22,7 @@ All 5 build phases from `architecture.md` are implemented and verified (type-che
 
 ### Update (2026-09-11): open AC items re-verified against the live deployed app
 
-Tested directly against `https://kalimuthukrishnaraj-ai.github.io/Track/` (Chromium, via browser automation), inspecting IndexedDB directly to confirm persistence rather than trusting the UI alone.
+Tested directly against `https://kalimuthukrishnaraj.github.io/Track/` (Chromium, via browser automation), inspecting IndexedDB directly to confirm persistence rather than trusting the UI alone.
 
 - **AC1.3 — PASS.** Deleting an entry (tested on a shopping_item) removes it from the UI immediately and from IndexedDB (confirmed via direct DB query after delete — not just hidden).
 - **AC5.4 — PASS.** Same `deleteEntry()` code path as AC1.3; same verification.
@@ -69,14 +69,14 @@ Changes made for this:
 ### Update (2026-09-11): repo is now on GitHub
 
 1. ✅ `deploy.yml` moved from `Claude outputs/` into `.github/workflows/deploy.yml` (contents were identical to the standalone copy; the stray `Claude outputs/` folder was deleted after confirming the diff).
-2. ✅ `git init`'d at `Track/`, root commit `6607200` (53 files — all docs + `App/` source, `node_modules`/`dist` excluded per `.gitignore`), pushed to `https://github.com/kalimuthukrishnaraj-ai/Track.git` on `main`.
+2. ✅ `git init`'d at `Track/`, root commit `6607200` (53 files — all docs + `App/` source, `node_modules`/`dist` excluded per `.gitignore`), pushed to `https://github.com/kalimuthukrishnaraj/Track.git` on `main`.
 
 ### Update (2026-09-11): live on GitHub Pages
 
 - Repo had to be made **public** — free GitHub Pages (via Actions) doesn't support private repos, and no code here contains personal data (all task/schedule data stays local in IndexedDB, per the local-only design), so this was a low-risk call.
 - Runs #1–#2 failed with `Get Pages site failed... Not Found` — expected, since they ran before Settings → Pages → Source was set to "GitHub Actions". Not a code issue.
 - Once Source was set to "GitHub Actions", an empty commit (`df87fdc`) retriggered the workflow: **run #3 succeeded** (build 21s, deploy 8s).
-- Verified live: **https://kalimuthukrishnaraj-ai.github.io/Track/** loads and renders the Agenda view correctly.
+- Verified live: **https://kalimuthukrishnaraj.github.io/Track/** loads and renders the Agenda view correctly.
 
 ### Still open
 - Real app icons (placeholder "T" on blue).
@@ -94,6 +94,17 @@ Added a one-line subtitle under each view's header title in [App.tsx](App/src/Ap
 ## User-confirmed behavior (2026-09-12): Settings export toggles are defaults, not retroactive
 
 On-device test: enabled Task/Errand in Settings → "Export defaults by type", then exported — those entries were still missing from the `.ics`. Root cause confirmed by user: the entries were created *before* the Settings toggle was turned on, so they individually still carried `exportToCalendar: false` from creation time. Settings only sets the default applied to *new* entries (`EntryFormModal.tsx`'s `emptyForm` reads `exportDefaults[type]` at creation), it never bulk-updates existing ones. Fix was flipping the toggle on the individual pre-existing entries — confirmed working. Not a bug; no code change made. Worth knowing if this recurs: there's no "apply defaults to all existing entries of this type" bulk action in Settings — could add one if it comes up again.
+
+## GitHub username change (2026-09-12)
+
+User renamed their GitHub account from `kalimuthukrishnaraj-ai` to `kalimuthukrishnaraj`. Updated to match:
+- Local git remote (`origin`) repointed to `https://github.com/kalimuthukrishnaraj/Track.git` — verified reachable via `git ls-remote` before pushing.
+- All `kalimuthukrishnaraj-ai.github.io` references in this file updated to `kalimuthukrishnaraj.github.io`.
+- The Track User Guide artifact's install link updated to the new Pages URL.
+- `.github/workflows/deploy.yml` needed no change — it never hardcodes the account name (uses GitHub Actions' own repo context).
+- `App/vite.config.ts`'s `base: '/Track/'` is keyed to the repo name, not the username — unaffected by this rename.
+
+GitHub Pages URLs follow the account automatically once renamed, and GitHub keeps the old repo URL redirecting for a period after a rename — but the remote was still repointed to the canonical new URL rather than relying on that redirect.
 
 ## Not yet done (other next steps)
 
