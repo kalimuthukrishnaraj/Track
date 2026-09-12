@@ -47,11 +47,14 @@ Changes made for this:
 - `App/src/App.tsx` — switched `BrowserRouter` → `HashRouter` (see "Current status" note in `CLAUDE.md` for why).
 - `.github/workflows/deploy.yml` — GitHub Actions workflow: on push to `main`, runs `npm ci && npm test && npm run build` in `App/`, then deploys `App/dist` via `actions/deploy-pages`. Casing corrected to `App` (see above) after being caught during this Claude Code handoff — hadn't been pushed yet, so no wasted CI run.
 
-### Still needed from the user (as of this note)
-1. Confirm/place `deploy.yml` at `Track\.github\workflows\deploy.yml` (it may be sitting in a `Claude outputs` folder, waiting to be moved — check there first).
-2. `git init` (or connect the existing empty `Track` repo on GitHub), commit, and push `Track/` to `main`.
-3. In the repo's Settings → Pages, set Source to "GitHub Actions" (one-time).
-4. First push triggers the workflow; the Actions tab shows build/deploy progress and the resulting `https://<user>.github.io/Track/` URL. Watch the first run specifically for the `App` vs `app` casing issue in case anything was missed.
+### Update (2026-09-11): repo is now on GitHub
+
+1. ✅ `deploy.yml` moved from `Claude outputs/` into `.github/workflows/deploy.yml` (contents were identical to the standalone copy; the stray `Claude outputs/` folder was deleted after confirming the diff).
+2. ✅ `git init`'d at `Track/`, root commit `6607200` (53 files — all docs + `App/` source, `node_modules`/`dist` excluded per `.gitignore`), pushed to `https://github.com/kalimuthukrishnaraj-ai/Track.git` on `main`.
+
+### Still needed from the user
+1. In the repo's Settings → Pages, set Source to "GitHub Actions" (one-time) — not yet confirmed done.
+2. The push above should have triggered the workflow; check the Actions tab for build/deploy progress and the resulting `https://kalimuthukrishnaraj-ai.github.io/Track/` URL. Watch this first run specifically for the `App` vs `app` casing issue in case anything was missed.
 
 ## Not yet done (other next steps)
 
