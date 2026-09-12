@@ -93,9 +93,22 @@ a {
   border-bottom: 1px solid var(--border);
 }
 
+.app-header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .app-header h1 {
   font-size: 1.15rem;
   margin: 0;
+}
+
+.app-header-subtitle {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 .icon-button {

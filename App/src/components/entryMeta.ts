@@ -8,11 +8,11 @@ export interface EntryTypeMeta {
 
 export const ENTRY_TYPE_META: Record<EntryType, EntryTypeMeta> = {
   task: { label: 'Task', icon: '✓', color: '#2563eb' },
-  work_shift: { label: 'Work shift', icon: '💼', color: '#7c3aed' },
+  work_shift: { label: 'Work Shift', icon: '💼', color: '#7c3aed' },
   assignment: { label: 'Assignment', icon: '📚', color: '#d97706' },
   appointment: { label: 'Appointment', icon: '🗓️', color: '#0891b2' },
   meal: { label: 'Meal', icon: '🍽️', color: '#16a34a' },
-  shopping_item: { label: 'Shopping item', icon: '🛒', color: '#db2777' },
+  shopping_item: { label: 'Shopping Item', icon: '🛒', color: '#db2777' },
   errand: { label: 'Errand', icon: '📍', color: '#65a30d' },
   travel: { label: 'Travel', icon: '✈️', color: '#dc2626' },
 };

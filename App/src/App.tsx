@@ -9,25 +9,46 @@ import { Shopping } from './views/Shopping';
 import { Settings } from './views/Settings';
 import type { EntryType } from './data/db';
 
-const ROUTE_META: Record<string, { title: string; fabType?: EntryType }> = {
-  '/': { title: 'Agenda' },
-  '/tasks': { title: 'Tasks', fabType: 'task' },
-  '/meals': { title: 'Meals', fabType: 'meal' },
-  '/shopping': { title: 'Shopping', fabType: 'shopping_item' },
-  '/settings': { title: 'Settings' },
+const ROUTE_META: Record<string, { title: string; subtitle: string; fabType?: EntryType }> = {
+  '/': {
+    title: 'Agenda',
+    subtitle: 'Work shifts, assignments, appointments & travel on one calendar.',
+  },
+  '/tasks': {
+    title: 'Tasks',
+    subtitle: 'To-dos and errands — filter by status or due date.',
+    fabType: 'task',
+  },
+  '/meals': {
+    title: 'Meals',
+    subtitle: "Plan the week's meals and add ingredients to your shopping list.",
+    fabType: 'meal',
+  },
+  '/shopping': {
+    title: 'Shopping',
+    subtitle: 'Shopping list items, grouped by list and checked off as you shop.',
+    fabType: 'shopping_item',
+  },
+  '/settings': {
+    title: 'Settings',
+    subtitle: 'Calendar export, backup & restore.',
+  },
 };
 
 function Shell() {
   const location = useLocation();
   const navigate = useNavigate();
   const openForCreate = useEntryFormStore((s) => s.openForCreate);
-  const meta = ROUTE_META[location.pathname] ?? { title: 'Track' };
+  const meta = ROUTE_META[location.pathname] ?? { title: 'Track', subtitle: '' };
   const showFab = location.pathname !== '/settings';
 
   return (
     <div className="app-shell">
       <header className="app-header">
-        <h1>{meta.title}</h1>
+        <div className="app-header-titles">
+          <h1>{meta.title}</h1>
+          {meta.subtitle && <p className="app-header-subtitle">{meta.subtitle}</p>}
+        </div>
         {location.pathname === '/settings' ? (
           <span style={{ width: 36 }} />
         ) : (

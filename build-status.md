@@ -87,6 +87,10 @@ Changes made for this:
 
 iOS Safari has no `beforeinstallprompt`-style API, so "Add to Home Screen" can only ever be a manual instruction, never a triggerable one. Added a dismissible banner to the top of the Agenda view ([Agenda.tsx](App/src/views/Agenda.tsx)) — it checks `display-mode: standalone` / `navigator.standalone` and only shows when the app isn't already installed; dismissal is remembered in `localStorage` (`track:installBannerDismissed`) so it doesn't nag every visit. Verified in the browser (light/dark, desktop/mobile width): shows correctly, dismiss button works, and dismissal survives reload. Placed on Agenda specifically since it's the landing route (`/`).
 
+## Per-tab description subtitles (2026-09-11)
+
+Added a one-line subtitle under each view's header title in [App.tsx](App/src/App.tsx) (`ROUTE_META`), explaining what each tab is for — prompted by the user being confused about how the bottom-nav tabs (4) relate to the Settings export-defaults list (6 entry types). Also corrected `ENTRY_TYPE_META` labels in [entryMeta.ts](App/src/components/entryMeta.ts) to full title case ("Work Shift", "Shopping Item" instead of "Work shift"/"Shopping item") — this label is reused everywhere (Settings list, the entry-type picker, Agenda row meta text), so the fix applies app-wide. Verified visually across all 5 routes (light/dark). One correction caught during review: the Shopping subtitle originally said "Grocery & errand items" — wrong, since `Shopping.tsx` only ever queries `shopping_item` entries (errands live under Tasks) — fixed before shipping.
+
 ## Not yet done (other next steps)
 
 - Real app icons — the PWA icons are a generated placeholder ("T" on blue), not a designed icon.
