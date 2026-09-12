@@ -20,11 +20,26 @@ All 5 build phases from `architecture.md` are implemented and verified (type-che
 - Backup export/restore round-trips entries losslessly (Phase 5 / AC7.1-7.3).
 - Re-verified all of the above served under the `/Track/` subpath (matching the GitHub Pages URL shape) with hash-based routing — same clean run, zero console errors.
 
-Not yet individually re-verified against every line of `acceptance-criteria.md` — flagging these as open:
-- AC1.3, AC1.5, AC5.4 (delete/validation behavior)
-- **AC4.3 is only half-satisfied**: shopping items link back to the meal (`shopping_item.linkedEntryIds` contains the meal id), but the meal's own `linkedEntryIds` is never updated to point at the generated items. AC4.3 as written wants that bidirectional. AC4.4 (what happens to those items if the meal is edited/deleted) also isn't implemented yet — no cascade behavior exists either way.
-- AC9.2 (dangling `linkedEntryIds` after a delete), AC9.3 (no stray network requests), AC9.4 (console-clean across all views — checked only for the flows in the Playwright script above, not a full manual pass)
-- AC6.1 (the export window isn't explicitly defined/documented — currently it's simply "every entry with `exportToCalendar: true` regardless of date," including past ones; worth deciding if that's actually right)
+### Update (2026-09-11): open AC items re-verified against the live deployed app
+
+Tested directly against `https://kalimuthukrishnaraj-ai.github.io/Track/` (Chromium, via browser automation), inspecting IndexedDB directly to confirm persistence rather than trusting the UI alone.
+
+- **AC1.3 — PASS.** Deleting an entry (tested on a shopping_item) removes it from the UI immediately and from IndexedDB (confirmed via direct DB query after delete — not just hidden).
+- **AC5.4 — PASS.** Same `deleteEntry()` code path as AC1.3; same verification.
+- **AC1.5 — FAIL.** No validation blocks save when a required payload field is empty. Concretely: cleared "List name" on a shopping_item to `""` and saved — it persisted to IndexedDB as `listName: ""` (the Shopping view's grouping just cosmetically falls back to "Groceries" for *display*, masking the underlying unvalidated empty value). `mealSlot` can't actually go blank since it's a `<select>` with no empty option, so that half is structurally fine, but that's incidental, not real validation. Root cause: `handleSave` in [EntryFormModal.tsx:281](App/src/components/EntryFormModal.tsx#L281) has no field checks before calling `createEntry`/`updateEntry`.
+- **AC4.3 — FAIL (unchanged).** Reconfirmed live: created a meal, added 2 ingredients — the resulting shopping_items have `linkedEntryIds: [mealId]`, but the meal's own record has no `linkedEntryIds` field at all. Link is one-directional only. Root cause: `handleAddIngredients` in [EntryFormModal.tsx:317](App/src/components/EntryFormModal.tsx#L317) never patches the meal.
+- **AC4.4 — PASS, behavior now documented.** Deleting a meal with linked shopping items leaves those items completely untouched (they become orphaned but independent) — no cascade delete, no cascade edit, in either `deleteEntry` or `updateEntry`. This is consistent every time (there's simply no cascade code path), which satisfies AC4.4's "pick one behavior and verify it holds." **Decision logged**: "remain independent" is the chosen/verified behavior — no code change needed for AC4.4 itself, but see AC4.3 above for the still-open half of the meal↔shopping-item relationship.
+- **AC9.2 — PASS.** After deleting the meal above, the two orphaned shopping_items (dangling `linkedEntryIds` pointing at a now-nonexistent id) still render correctly on the Shopping view and open for editing with no console errors and no crash — nothing in the codebase dereferences `linkedEntryIds` targets assuming they exist; it's only ever used as a `.filter()`/`.includes()` membership check.
+- **AC9.3 — PASS.** Watched network requests through create/edit/add-ingredients/delete/navigate flows — only same-origin static-asset GETs (JS/CSS bundles), no other requests at any point.
+- **AC9.4 — PASS.** No console errors from app code across Agenda, Tasks, Meals, Shopping, Settings, or through the create/edit/delete/add-ingredients flows tested above.
+- **AC6.1 — still FAIL / open decision.** `listExportableEntries()` in [entries.ts:84](App/src/data/repositories/entries.ts#L84) returns every `exportToCalendar: true` entry regardless of date — confirmed unchanged, not yet re-verified further since it needs a decision first (see below) before it's meaningful to test against a definition.
+
+**Decision needed (not yet made or implemented) for AC6.1**: recommend filtering the export to (a) all recurring entries regardless of their original `startAt` (their RRULE's DTSTART must stay as-is for correct future-occurrence expansion in Apple Calendar) plus (b) non-recurring entries with `startAt >= start of today`. Flagging this rather than implementing it unilaterally since it changes export output.
+
+**Still open, not yet fixed**:
+- AC1.5 — add save-blocking validation for `listName` (and reconsider whether `mealSlot`'s forced-default is actually sufficient or if the intent was broader payload validation).
+- AC4.3 — make the meal→shopping-item link bidirectional by patching the meal's `linkedEntryIds` in `handleAddIngredients`.
+- AC6.1 — implement the upcoming-window filter above once confirmed.
 
 ## Folder naming (read this before assuming `architecture.md`'s prose is literal)
 
