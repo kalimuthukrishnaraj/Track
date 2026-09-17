@@ -106,6 +106,10 @@ User renamed their GitHub account from `kalimuthukrishnaraj-ai` to `kalimuthukri
 
 GitHub Pages URLs follow the account automatically once renamed, and GitHub keeps the old repo URL redirecting for a period after a rename — but the remote was still repointed to the canonical new URL rather than relying on that redirect.
 
+## User guide added to the repo (2026-09-16)
+
+Added [`user-guide.html`](user-guide.html) at the repo root — a self-contained, styled HTML page (originally drafted and iterated on as a Claude Artifact) covering install steps, a tour of all four tabs with annotated UI mockups, the entry-type reference table, and calendar export/backup instructions. Linked from `README.md`. Deliberately placed at repo root (not `App/public/`) per explicit instruction — it's a doc artifact, not part of the deployed PWA build, so GitHub shows it as repo source rather than a live rendered page; open it locally or via a raw-HTML viewer to view it rendered.
+
 ## Not yet done (other next steps)
 
 - Real app icons — the PWA icons are a generated placeholder ("T" on blue), not a designed icon.

@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track User Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --paper: #f7f8fb;
+    --surface: #ffffff;
+    --surface-2: #eef1f7;
+    --ink: #10151f;
+    --muted: #5b6472;
+    --line: #e1e5ee;
+    --accent: #2563eb;
+    --accent-soft: #e8eefc;
+    --accent-ink: #ffffff;
+    --warn: #b45309;
+    --warn-soft: #fef3e2;
+    --warn-line: #f2d9ab;
+
+    --c-task: #2563eb;
+    --c-work: #7c3aed;
+    --c-assign: #d97706;
+    --c-appt: #0891b2;
+    --c-meal: #16a34a;
+    --c-shop: #db2777;
+    --c-errand: #65a30d;
+    --c-travel: #dc2626;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0b1220;
+      --surface: #121a2b;
+      --surface-2: #182238;
+      --ink: #e6eaf2;
+      --muted: #8b96ab;
+      --line: #232f45;
+      --accent: #5b8dfb;
+      --accent-soft: rgba(91, 141, 251, 0.16);
+      --accent-ink: #071022;
+      --warn: #f0b45e;
+      --warn-soft: rgba(240, 180, 94, 0.12);
+      --warn-line: rgba(240, 180, 94, 0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0b1220;
+    --surface: #121a2b;
+    --surface-2: #182238;
+    --ink: #e6eaf2;
+    --muted: #8b96ab;
+    --line: #232f45;
+    --accent: #5b8dfb;
+    --accent-soft: rgba(91, 141, 251, 0.16);
+    --accent-ink: #071022;
+    --warn: #f0b45e;
+    --warn-soft: rgba(240, 180, 94, 0.12);
+    --warn-line: rgba(240, 180, 94, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    margin: 0;
+  }
+
+  body {
+    font-family: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 20px 90px;
+  }
+
+  h1, h2, h3 {
+    font-family: "Manrope", sans-serif;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  header.hero {
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+
+  p.masthead {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--muted);
+    margin: 10px 0 0;
+    max-width: 56ch;
+  }
+
+  header.hero h1.brand {
+    font-size: clamp(2.8rem, 8vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  header.hero p.lede {
+    max-width: 60ch;
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-top: 12px;
+  }
+
+  nav.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+  }
+
+  nav.toc a {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  nav.toc a:hover, nav.toc a:focus-visible { border-color: var(--accent); color: var(--accent); }
+
+  section { margin-top: 56px; scroll-margin-top: 20px; }
+
+  section > .section-head { margin-bottom: 18px; }
+
+  section h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  section p.dek {
+    color: var(--muted);
+    max-width: 62ch;
+    margin-top: 8px;
+  }
+
+  .callout {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .callout .glyph { font-size: 1.15rem; line-height: 1.3; }
+  .callout .body { flex: 1; min-width: 0; }
+  .callout .body strong { font-family: "Manrope"; font-weight: 700; }
+  .callout p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
+
+  .callout.warn {
+    background: var(--warn-soft);
+    border-color: var(--warn-line);
+  }
+  .callout.warn .body strong { color: var(--warn); }
+
+  .url-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-radius: 14px;
+    text-decoration: none;
+  }
+  .url-box .url-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .url-box .url-value {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .url-box:hover, .url-box:focus-visible { filter: brightness(1.06); }
+
+  /* ---- generic mock UI ---- */
+  .mock {
+    width: 100%;
+    max-width: 360px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px -14px rgba(15, 23, 42, 0.25);
+    font-size: 13px;
+  }
+  .mock-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .mock-head h4 { font-family: "Manrope"; font-size: 1rem; font-weight: 800; margin: 0; }
+  .mock-head .sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .mock-gear { color: var(--muted); font-size: 15px; }
+  .mock-body { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    margin-left: 5px;
+    flex-shrink: 0;
+  }
+
+  .mock-chip-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .mock-chip {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 11.5px;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+  }
+  .mock-chip.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+  .mock-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: var(--surface-2);
+    border-radius: 10px;
+  }
+  .mock-row .left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .mock-row .label { font-weight: 600; }
+  .mock-row .meta { color: var(--muted); font-size: 11px; }
+  .mock-check {
+    width: 17px; height: 17px;
+    border-radius: 5px;
+    border: 1.5px solid var(--line);
+    flex-shrink: 0;
+  }
+  .mock-check.on { background: #16a34a; border-color: #16a34a; }
+
+  .mock-banner {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: var(--ink);
+  }
+
+  .mock-toggle {
+    width: 30px; height: 17px;
+    border-radius: 999px;
+    background: var(--line);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .mock-toggle.on { background: var(--accent); }
+  .mock-toggle::after {
+    content: "";
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 13px; height: 13px;
+    border-radius: 50%;
+    background: white;
+  }
+  .mock-toggle.on::after { left: 15px; }
+
+  .mock-btn {
+    text-align: center;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+    padding: 8px;
+    border-radius: 9px;
+    font-size: 11.5px;
+  }
+  .mock-btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  .mock-btn.danger { background: transparent; border: 1px solid #dc2626; color: #dc2626; }
+
+  .mock-input {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+
+  .mock-field label { display: block; font-size: 10.5px; color: var(--muted); margin-bottom: 3px; }
+  .mock-field .val { border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font-size: 12px; }
+
+  .type-grid-mock {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .type-cell {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 9.5px;
+  }
+  .type-cell .ic { font-size: 15px; display: block; margin-bottom: 3px; }
+
+  /* ---- teach layout: mock + legend ---- */
+  .teach {
+    display: grid;
+    grid-template-columns: minmax(0, 360px) 1fr;
+    gap: 24px;
+    align-items: start;
+    margin-top: 20px;
+  }
+  @media (max-width: 640px) {
+    .teach { grid-template-columns: 1fr; }
+  }
+  ol.legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  ol.legend li { display: flex; gap: 10px; }
+  ol.legend .num {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  ol.legend strong { font-family: "Manrope"; }
+  ol.legend span.d { color: var(--muted); display: block; font-size: 0.92rem; margin-top: 1px; }
+
+  .stripe-card {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+  }
+  .stripe-card .stripe { width: 6px; flex-shrink: 0; }
+  .stripe-card .content { padding: 14px 16px; flex: 1; }
+  .stripe-card h3 { font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .stripe-card p { margin: 6px 0 0; color: var(--muted); font-size: 0.92rem; }
+  .stripe-card .types { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .stripe-card .types span {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    padding: 3px 9px;
+  }
+
+  .tab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .tab-grid { grid-template-columns: 1fr; } }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin-top: 18px;
+  }
+  caption { text-align: left; color: var(--muted); font-size: 0.85rem; margin-bottom: 8px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; }
+  td.num { font-variant-numeric: tabular-nums; }
+  .swatch { display: inline-flex; align-items: center; gap: 8px; }
+  .swatch .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .table-wrap { overflow-x: auto; }
+
+  .steps { counter-reset: step; list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 38px;
+    font-size: 0.95rem;
+  }
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0; top: -1px;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 700;
+    font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .steps li strong { font-family: "Manrope"; display: block; }
+  .steps li span.d { color: var(--muted); }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-family: "IBM Plex Mono", monospace;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <h1 class="brand">Track</h1>
+    <p class="masthead">Single-user, local-only. No account, no server, no tracking. Created by Krishnaraj Kalimuthu.</p>
+    <p class="lede">Everything Track does, and where to find it — the Agenda, Tasks, Meals and Shopping tabs, the eight entry types, calendar export, and backup.</p>
+    <nav class="toc">
+      <a href="#install">Install it</a>
+      <a href="#tabs">The four tabs</a>
+      <a href="#types">Entry types</a>
+      <a href="#editing">Adding &amp; editing</a>
+      <a href="#export">Calendar export</a>
+      <a href="#backup">Backup &amp; restore</a>
+    </nav>
+  </header>
+
+  <section id="install">
+    <div class="section-head">
+      <span class="kicker">01</span>
+      <h2>Install it on your phone</h2>
+      <p class="dek">Track is a web app, not an App Store app — you install it straight from Safari. Do this before anything else: it changes how iOS treats your data.</p>
+    </div>
+
+    <a class="url-box" href="https://kalimuthukrishnaraj.github.io/Track/" target="_blank" rel="noopener">
+      <span class="url-label">Open in Safari</span>
+      <span class="url-value">kalimuthukrishnaraj.github.io/Track</span>
+    </a>
+
+    <div class="teach">
+      <div class="mock">
+        <div class="mock-head">
+          <div>
+            <h4>Agenda</h4>
+            <div class="sub">Work shifts, assignments, appointments &amp; travel on one calendar.</div>
+          </div>
+          <div class="mock-gear">&#9881;</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-banner">
+            Tap <strong>Share</strong> then <strong>Add to Home Screen</strong><span class="tag">1</span> — Track works best installed, with full offline access.
+          </div>
+          <div class="mock-chip-row">
+            <span class="mock-chip active">Day</span>
+            <span class="mock-chip">Week</span>
+            <span class="mock-chip">Month</span>
+          </div>
+        </div>
+      </div>
+
+      <ol class="legend">
+        <li><span class="num">1</span><div><strong>The install banner.</strong><span class="d">Shows at the top of Agenda until you install, or until you dismiss it. In Safari: tap the <strong>Share</strong> icon, then <strong>Add to Home Screen</strong>.</span></div></li>
+      </ol>
+    </div>
+
+    <div class="callout warn">
+      <div class="glyph">&#9888;&#65039;</div>
+      <div class="body">
+        <strong>Why this actually matters</strong>
+        <p>iOS clears storage for sites you haven't opened in 7 days — including Track's entries. An installed, home-screen app is exempt from that cleanup. Since Track has no cloud sync, skipping install risks silently losing everything if you go a week without opening it in a regular Safari tab.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tabs">
+    <div class="section-head">
+      <span class="kicker">02</span>
+      <h2>The four tabs</h2>
+      <p class="dek">The bottom nav groups your eight entry types by how you'd actually manage them, not by their raw type — that's why Settings lists more types than there are tabs.</p>
+    </div>
+
+    <div class="tab-grid">
+      <div class="stripe-card">
+        <div class="stripe" style="background:var(--c-appt)"></div>
+        <div class="content">
+          <h3>&#128197; Agenda</h3>
+          <p>Day / Week / Month calendar. Everything with a real slot in your schedule lives here.</p>
+          <div class="types"><span>Work Shift</span><span>Assignment</span><span>Appointment</span><span>Travel</span></div>
+        </div>
+      </div>
+      <div class="stripe-card">
+        <div class="stripe" style="background:var(--c-task)"></div>
+        <div class="content">
+          <h3>&#10003; Tasks</h3>
+          <p>To-dos and errands. Search, filter by status or due date, check off without opening the entry.</p>
+          <div class="types"><span>Task</span><span>Errand</span></div>
+        </div>
+      </div>
+      <div class="stripe-card">
+        <div class="stripe" style="background:var(--c-meal)"></div>
+        <div class="content">
+          <h3>&#127869;&#65039; Meals</h3>
+          <p>A 7-day &times; 4-slot grid. Plan a meal, then push its ingredients straight to Shopping.</p>
+          <div class="types"><span>Meal</span></div>
+        </div>
+      </div>
+      <div class="stripe-card">
+        <div class="stripe" style="background:var(--c-shop)"></div>
+        <div class="content">
+          <h3>&#128722; Shopping</h3>
+          <p>Checklist items grouped by list name — Groceries, Hardware, whatever you name it.</p>
+          <div class="types"><span>Shopping Item</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.05rem; margin-top:30px;">Agenda</h3>
+    <div class="teach">
+      <div class="mock">
+        <div class="mock-head">
+          <div><h4>Agenda</h4><div class="sub">Sep 7 – Sep 13</div></div>
+          <div class="mock-gear">&#9881;</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-chip-row">
+            <span class="mock-chip">Day</span>
+            <span class="mock-chip active">Week<span class="tag">1</span></span>
+            <span class="mock-chip">Month</span>
+          </div>
+          <div class="mock-chip-row" style="justify-content:space-between; color:var(--muted); font-size:11px;">
+            <span>&lsaquo;<span class="tag">2</span></span>
+            <span>Today</span>
+            <span>&rsaquo;</span>
+          </div>
+          <div class="mock-row">
+            <div class="left"><span class="dot" style="background:var(--c-work)"></span><span class="label">Morning Shift</span></div>
+            <span class="meta">9:00 AM</span>
+          </div>
+          <div class="mock-row">
+            <div class="left"><span class="dot" style="background:var(--c-appt)"></span><span class="label">Dentist Checkup</span></div>
+            <span class="meta">2:00 PM</span>
+          </div>
+          <div class="mock-row">
+            <div class="left"><span class="dot" style="background:var(--c-travel)"></span><span class="label">Flight to Seattle</span><span class="tag">3</span></div>
+            <span class="meta">All day</span>
+          </div>
+        </div>
+      </div>
+      <ol class="legend">
+        <li><span class="num">1</span><div><strong>View switch.</strong><span class="d">Day, Week, or Month — same data, different zoom level.</span></div></li>
+        <li><span class="num">2</span><div><strong>Range nav.</strong><span class="d">Step to the previous/next period, or jump back to Today.</span></div></li>
+        <li><span class="num">3</span><div><strong>Colored dot.</strong><span class="d">Matches the entry's type color — see the Entry Types reference below. Tap any row to edit it; the recurring ones (like a weekly shift) expand automatically into every occurrence in range.</span></div></li>
+      </ol>
+    </div>
+
+    <h3 style="font-size:1.05rem; margin-top:34px;">Tasks</h3>
+    <div class="teach">
+      <div class="mock">
+        <div class="mock-head">
+          <div><h4>Tasks</h4><div class="sub">To-dos and errands</div></div>
+          <div class="mock-gear">&#9881;</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-input">Search tasks and errands&#8230;<span class="tag">1</span></div>
+          <div class="mock-chip-row">
+            <span class="mock-chip active">Pending</span>
+            <span class="mock-chip">Done</span>
+            <span class="mock-chip">All<span class="tag">2</span></span>
+          </div>
+          <div class="mock-chip-row">
+            <span class="mock-chip">All</span>
+            <span class="mock-chip">Overdue</span>
+            <span class="mock-chip active">Today<span class="tag">3</span></span>
+            <span class="mock-chip">Upcoming</span>
+          </div>
+          <div class="mock-row">
+            <div class="left"><span class="mock-check"></span><span class="label">Renew passport</span><span class="tag">4</span></div>
+            <span class="meta">High</span>
+          </div>
+        </div>
+      </div>
+      <ol class="legend">
+        <li><span class="num">1</span><div><strong>Search.</strong><span class="d">Filters by title as you type.</span></div></li>
+        <li><span class="num">2</span><div><strong>Status filter.</strong><span class="d">Pending / Done / All.</span></div></li>
+        <li><span class="num">3</span><div><strong>Due-date filter.</strong><span class="d">Overdue, Today, Upcoming, or items with No due date.</span></div></li>
+        <li><span class="num">4</span><div><strong>Checkbox.</strong><span class="d">Marks done in one tap — no need to open the entry.</span></div></li>
+      </ol>
+    </div>
+
+    <h3 style="font-size:1.05rem; margin-top:34px;">Meals</h3>
+    <div class="teach">
+      <div class="mock">
+        <div class="mock-head">
+          <div><h4>Meals</h4><div class="sub">Mon, Sep 7</div></div>
+          <div class="mock-gear">&#9881;</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-row"><div class="left"><span class="label">Breakfast</span></div><span class="meta">Overnight Oats<span class="tag">1</span></span></div>
+          <div class="mock-row"><div class="left"><span class="label">Lunch</span></div><span class="meta">+ Add</span></div>
+          <div class="mock-row"><div class="left"><span class="label">Dinner</span></div><span class="meta">Chicken Tacos<span class="tag">2</span></span></div>
+          <div class="mock-row"><div class="left"><span class="label">Snack</span></div><span class="meta">+ Add</span></div>
+        </div>
+      </div>
+      <ol class="legend">
+        <li><span class="num">1</span><div><strong>Empty slot.</strong><span class="d">Tap "+ Add" to plan a meal for that day and slot.</span></div></li>
+        <li><span class="num">2</span><div><strong>Planned meal.</strong><span class="d">Tap to open it, then use "Add ingredients to shopping list" — each line becomes a Shopping entry linked back to this meal (visible from both sides).</span></div></li>
+      </ol>
+    </div>
+
+    <h3 style="font-size:1.05rem; margin-top:34px;">Shopping</h3>
+    <div class="teach">
+      <div class="mock">
+        <div class="mock-head">
+          <div><h4>Shopping</h4><div class="sub">Shopping list items, grouped by list</div></div>
+          <div class="mock-gear">&#9881;</div>
+        </div>
+        <div class="mock-body">
+          <div style="font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--muted); letter-spacing:.04em;">GROCERIES &middot; 2 LEFT<span class="tag">1</span></div>
+          <div class="mock-row"><div class="left"><span class="mock-check"></span><span class="label">Chicken thighs</span></div></div>
+          <div class="mock-row"><div class="left"><span class="mock-check on"></span><span class="label" style="text-decoration:line-through;color:var(--muted)">Taco shells</span><span class="tag">2</span></div></div>
+        </div>
+      </div>
+      <ol class="legend">
+        <li><span class="num">1</span><div><strong>List name.</strong><span class="d">Items are grouped by whatever you type into "List name" — e.g. Groceries, Hardware. Required: an item can't be saved without one.</span></div></li>
+        <li><span class="num">2</span><div><strong>Checked items</strong><span class="d">sort to the bottom with a strikethrough, but stay on the list until you delete them.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="types">
+    <div class="section-head">
+      <span class="kicker">03</span>
+      <h2>Entry types, at a glance</h2>
+      <p class="dek">Every entry is one of these eight types. The type decides its icon and color everywhere in the app, which tab it lives on, and whether it's eligible for calendar export at all.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Lives on</th><th>Exportable</th><th>Default export</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="swatch"><span class="dot" style="background:var(--c-task)"></span>&#10003; Task</span></td><td>Tasks</td><td>Yes</td><td>Off</td></tr>
+          <tr><td><span class="swatch"><span class="dot" style="background:var(--c-work)"></span>&#128188; Work Shift</span></td><td>Agenda</td><td>Yes</td><td>On</td></tr>
+          <tr><td><span class="swatch"><span class="dot" style="background:var(--c-assign)"></span>&#128218; Assignment</span></td><td>Agenda</td><td>Yes</td><td>On</td></tr>
+          <tr><td><span class="swatch"><span class="dot" style="background:var(--c-appt)"></span>&#128197; Appointment</span></td><td>Agenda</td><td>Yes</td><td>On</td></tr>
+          <tr><td><span class="swatch"><span class="dot" style="background:var(--c-meal)"></span>&#127869;&#65039; Meal</span></td><td>Meals</td><td>No</td><td>&mdash;</td></tr>
+          <tr><td><span class="swatch"><span class="dot" style="background:var(--c-shop)"></span>&#128722; Shopping Item</span></td><td>Shopping</td><td>No</td><td>&mdash;</td></tr>
+          <tr><td><span class="swatch"><span class="dot" style="background:var(--c-errand)"></span>&#128205; Errand</span></td><td>Tasks</td><td>Yes</td><td>Off</td></tr>
+          <tr><td><span class="swatch"><span class="dot" style="background:var(--c-travel)"></span>&#9992;&#65039; Travel</span></td><td>Agenda</td><td>Yes</td><td>On</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="editing">
+    <div class="section-head">
+      <span class="kicker">04</span>
+      <h2>Adding &amp; editing an entry</h2>
+      <p class="dek">The same form handles all eight types — it just shows different fields depending which one you pick.</p>
+    </div>
+
+    <div class="teach">
+      <div class="mock">
+        <div class="mock-head">
+          <div><h4>New entry</h4></div>
+          <div class="mock-gear">&#10005;</div>
+        </div>
+        <div class="mock-body">
+          <div class="type-grid-mock">
+            <div class="type-cell"><span class="ic">&#10003;</span>Task<span class="tag">1</span></div>
+            <div class="type-cell"><span class="ic">&#128188;</span>Work Shift</div>
+            <div class="type-cell"><span class="ic">&#128218;</span>Assignment</div>
+            <div class="type-cell"><span class="ic">&#128197;</span>Appointment</div>
+          </div>
+          <div class="mock-field"><label>Title</label><div class="val">Renew passport</div></div>
+          <div class="mock-chip-row" style="justify-content:space-between;">
+            <span style="font-size:11.5px;">Repeats<span class="tag">2</span></span>
+            <span class="mock-chip">Weekly</span>
+          </div>
+          <div class="mock-chip-row" style="justify-content:space-between;">
+            <span style="font-size:11.5px;">Include in calendar export<span class="tag">3</span></span>
+            <div class="mock-toggle on"></div>
+          </div>
+          <div class="mock-chip-row" style="gap:8px;">
+            <div class="mock-btn danger" style="flex:1;">Delete<span class="tag">4</span></div>
+            <div class="mock-btn" style="flex:1;">Save</div>
+          </div>
+        </div>
+      </div>
+      <ol class="legend">
+        <li><span class="num">1</span><div><strong>Pick a type</strong><span class="d">first — the rest of the form adjusts to it (e.g. Meal shows a meal-slot picker, Shopping Item shows List name).</span></div></li>
+        <li><span class="num">2</span><div><strong>Repeats.</strong><span class="d">Daily / Weekly / Monthly / Yearly. Recurring entries expand automatically wherever they'd fall — Agenda, and calendar export.</span></div></li>
+        <li><span class="num">3</span><div><strong>Calendar export toggle.</strong><span class="d">Pre-filled from your Settings default for this type, but it's per-entry — flip it here to override just this one.</span></div></li>
+        <li><span class="num">4</span><div><strong>Delete</strong><span class="d">only appears once you're editing an existing entry, and asks you to confirm — it removes the entry for good.</span></div></li>
+      </ol>
+    </div>
+
+    <div class="callout">
+      <div class="glyph">&#128161;</div>
+      <div class="body">
+        <strong>Required fields are enforced</strong>
+        <p>A Shopping Item can't be saved with a blank List name — Save is blocked and an inline message tells you why. This keeps the Shopping tab's grouping accurate instead of silently falling back to a default.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="export">
+    <div class="section-head">
+      <span class="kicker">05</span>
+      <h2>Calendar export</h2>
+      <p class="dek">Track generates a standard <code style="font-family:'IBM Plex Mono'">.ics</code> file you open on your phone to drop reminders straight into Apple Calendar — export is a manual, repeatable action, not a live sync.</p>
+    </div>
+
+    <div class="teach">
+      <div class="mock">
+        <div class="mock-head">
+          <div><h4>Settings</h4><div class="sub">Calendar export, backup &amp; restore</div></div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-btn">Export to Calendar (.ics)<span class="tag">1</span></div>
+          <div style="font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--muted); letter-spacing:.04em; margin-top:4px;">EXPORT DEFAULTS BY TYPE<span class="tag">2</span></div>
+          <div class="mock-row"><div class="left"><span class="label">&#128197; Appointment</span></div><div class="mock-toggle on"></div></div>
+          <div class="mock-row"><div class="left"><span class="label">&#10003; Task</span></div><div class="mock-toggle"></div></div>
+        </div>
+      </div>
+      <ol class="legend">
+        <li><span class="num">1</span><div><strong>Export to Calendar.</strong><span class="d">Downloads one .ics with every entry currently flagged for export — recurring ones included regardless of date, one-off entries only if today or later.</span></div></li>
+        <li><span class="num">2</span><div><strong>Per-type defaults.</strong><span class="d">Set what a <em>new</em> entry of that type starts with. See the callout below before you rely on this.</span></div></li>
+      </ol>
+    </div>
+
+    <div class="callout warn">
+      <div class="glyph">&#9888;&#65039;</div>
+      <div class="body">
+        <strong>Defaults aren't retroactive</strong>
+        <p>Flipping a type on in Settings only changes what <em>new</em> entries of that type start with. Entries you created earlier keep whatever the toggle was set to back then — open each one and flip its own "Include in calendar export" switch if you want it included now.</p>
+      </div>
+    </div>
+
+    <table>
+      <caption>Reminder lead time per type, applied automatically on export</caption>
+      <thead><tr><th>Type</th><th>Reminder</th></tr></thead>
+      <tbody>
+        <tr><td>Appointment, Work Shift, Task, Errand</td><td>60 minutes before</td></tr>
+        <tr><td>Travel</td><td>24 hours before, and 3 hours before</td></tr>
+        <tr><td>Assignment</td><td>6:00 PM the day before it's due</td></tr>
+        <tr><td>Meal</td><td>Your chosen prep-time offset, if you set one</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="backup">
+    <div class="section-head">
+      <span class="kicker">06</span>
+      <h2>Backup &amp; restore</h2>
+      <p class="dek">Your data lives only in this browser, on this device. There's no account and nothing to sync — a backup file is the only way to move or recover it.</p>
+    </div>
+
+    <ol class="steps">
+      <li><strong>Export backup</strong><span class="d">Settings &rarr; Export backup (JSON) downloads every entry currently in Track, exactly as stored.</span></li>
+      <li><strong>Keep it somewhere safe</strong><span class="d">iCloud Drive, email it to yourself, wherever you won't lose it — the file is your only copy outside this device.</span></li>
+      <li><strong>Restore from file</strong><span class="d">Settings &rarr; Restore from backup, pick the file, then confirm. This is destructive on purpose: it replaces everything currently in Track with the backup's contents.</span></li>
+    </ol>
+
+    <div class="callout warn">
+      <div class="glyph">&#9888;&#65039;</div>
+      <div class="body">
+        <strong>Restore replaces, it doesn't merge</strong>
+        <p>Whatever's in Track when you restore gets wiped and swapped for the backup's contents. Export a fresh backup first if there's anything since your last one you don't want to lose.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>That's everything Track does.</footer>
+
+</div>
+</body>
+</html>
