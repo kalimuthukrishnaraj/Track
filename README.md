@@ -7,7 +7,7 @@ stored only in that device's browser storage. No account, no backend, no data
 ever leaves the device.
 
 **Live app:** https://kalimuthukrishnaraj.github.io/Track/
-**User guide:** [`user-guide.html`](user-guide.html) — install steps, a tour of every tab, and how calendar export/backup work
+**User guide:** [`user-guide.md`](user-guide.md) — install steps, a tour of every tab, and how calendar export/backup work (a styled version is also at [`user-guide.html`](user-guide.html), though GitHub shows HTML as source rather than rendering it)
 
 ## Why local-only
 

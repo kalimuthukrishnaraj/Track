@@ -108,7 +108,9 @@ GitHub Pages URLs follow the account automatically once renamed, and GitHub keep
 
 ## User guide added to the repo (2026-09-16)
 
-Added [`user-guide.html`](user-guide.html) at the repo root — a self-contained, styled HTML page (originally drafted and iterated on as a Claude Artifact) covering install steps, a tour of all four tabs with annotated UI mockups, the entry-type reference table, and calendar export/backup instructions. Linked from `README.md`. Deliberately placed at repo root (not `App/public/`) per explicit instruction — it's a doc artifact, not part of the deployed PWA build, so GitHub shows it as repo source rather than a live rendered page; open it locally or via a raw-HTML viewer to view it rendered.
+Added [`user-guide.html`](user-guide.html) at the repo root — a self-contained, styled HTML page (originally drafted and iterated on as a Claude Artifact) covering install steps, a tour of all four tabs with annotated UI mockups, the entry-type reference table, and calendar export/backup instructions. Deliberately placed at repo root (not `App/public/`) per explicit instruction — it's a doc artifact, not part of the deployed PWA build.
+
+**Update:** GitHub shows `.html` files as raw source rather than rendering them, so also added [`user-guide.md`](user-guide.md) — same content, converted to GitHub-flavored Markdown (tables, blockquote callouts for the warnings, numbered/bulleted steps in place of the HTML mockups) so it actually renders on GitHub. `README.md`'s "User guide" link now points to the `.md` version as primary, with the `.html` one noted as a styled alternative for local/other viewing.
 
 ## Not yet done (other next steps)
 
